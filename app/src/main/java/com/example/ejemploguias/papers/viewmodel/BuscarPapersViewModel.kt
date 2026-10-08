@@ -38,7 +38,9 @@ class BuscarPapersViewModel(private val repositorio: PaperRepository) : ViewMode
         .map { lista -> lista.map { it.id }.toSet() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
 
-    private val _eventos = MutableSharedFlow<String>()
+    /** Eventos de una sola vez (snackbar). Con buffer: un emisor nunca pierde
+     *  el evento aunque el colector de la UI se incorpore una fracción después. */
+    private val _eventos = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val eventos: SharedFlow<String> = _eventos.asSharedFlow()
 
     fun cambiarConsulta(valor: String) {

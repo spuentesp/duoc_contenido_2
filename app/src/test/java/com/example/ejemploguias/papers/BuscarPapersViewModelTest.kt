@@ -3,10 +3,10 @@ package com.example.ejemploguias.papers
 import com.example.ejemploguias.papers.repository.PaperRepository
 import com.example.ejemploguias.papers.repository.ResultadoApi
 import com.example.ejemploguias.papers.viewmodel.BuscarPapersViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -71,11 +71,14 @@ class BuscarPapersViewModelTest {
     fun `guardar marca el id como guardado y emite el evento de snackbar`() =
         runTest(dispatcher) {
             val viewModel = viewModelCon(FakeOpenApi(respuestaDeEjemplo()))
-            val eventos = mutableListOf<String>()
+            val idEsperado = "https://openalex.org/W4312611271"
 
-            // backgroundScope se cancela solo al terminar el test (colectores infinitos).
-            backgroundScope.launch { viewModel.idsGuardados.collect { } }
-            backgroundScope.launch { viewModel.eventos.collect { eventos.add(it) } }
+            // Los colectores van en `async` del propio test, no en backgroundScope:
+            // las tareas de backgroundScope son de baja prioridad y se suscriben tarde,
+            // después de la emisión (evento perdido). `first { }` termina apenas llega
+            // lo esperado, así runTest nunca queda esperando colectores infinitos.
+            val primerEvento = async { viewModel.eventos.first() }
+            val idsRecibidos = async { viewModel.idsGuardados.first { it.contains(idEsperado) } }
             advanceUntilIdle()
 
             viewModel.cambiarConsulta("kotlin")
@@ -86,7 +89,9 @@ class BuscarPapersViewModelTest {
             viewModel.guardar(papers.first())
             advanceUntilIdle()
 
-            assertTrue(viewModel.idsGuardados.value.contains("https://openalex.org/W4312611271"))
-            assertTrue(eventos.any { it.startsWith("Guardado en favoritos") })
+            val ids = idsRecibidos.await()
+            val evento = primerEvento.await()
+            assertTrue("ids=$ids", ids.contains(idEsperado))
+            assertTrue("evento=$evento", evento.startsWith("Guardado en favoritos"))
         }
 }

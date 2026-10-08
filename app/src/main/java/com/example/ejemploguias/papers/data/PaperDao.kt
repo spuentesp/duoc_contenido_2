@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PaperDao {
 
+    @Query("SELECT * FROM papers ORDER BY fechaGuardado DESC")
     fun favoritos(): Flow<List<PaperEntity>>
 
     @Query("SELECT * FROM papers WHERE id = :id")

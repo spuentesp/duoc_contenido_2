@@ -198,7 +198,7 @@ fun PapersExplicacionScreen(onVolver: () -> Unit) {
             BloqueExplicacion(
                 titulo = "4. Retrofit en 3 pasos",
                 parrafos = listOf(
-                    "Paso 1 — Interfaz: cada método es un endpoint. @GET(\\\"works\\\") apunta a /works de la API y " +
+                    "Paso 1 — Interfaz: cada método es un endpoint. @GET(\"works\") apunta a /works de la API y " +
                         "@Query agrega los parámetros de la URL (?search=...&per-page=25). El suspend hace la " +
                         "petición en segundo plano sin Thread ni runBlocking.",
                     "Paso 2 — Cliente: Retrofit.Builder con la base URL arma el cliente HTTP una sola vez.",

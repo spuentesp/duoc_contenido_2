@@ -6,7 +6,6 @@ import com.example.ejemploguias.papers.repository.ResultadoApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -63,9 +62,8 @@ class PaperRepositoryTest {
 
         repositorio.guardar(paper)
 
-        val guardado = dao.obtenerPorId(paper.id)
-        assertNotNull(guardado)
-        assertEquals(paper.titulo, guardado!!.titulo)
+        val guardado = requireNotNull(dao.obtenerPorId(paper.id))
+        assertEquals(paper.titulo, guardado.titulo)
         assertEquals(paper.anio, guardado.anio)
         assertEquals("", guardado.nota)
     }

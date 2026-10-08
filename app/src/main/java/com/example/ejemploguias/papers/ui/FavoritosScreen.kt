@@ -75,48 +75,50 @@ fun FavoritosScreen(
                 var notaLocal by remember(favorito.nota) { mutableStateOf(favorito.nota) }
                 val enlace = favorito.url ?: favorito.doi?.let { "https://doi.org/$it" }
 
-                TarjetaPaper(
-                    titulo = favorito.titulo,
-                    autores = favorito.autores,
-                    anio = favorito.anio,
-                    doi = favorito.doi,
-                    url = favorito.url,
-                    nota = favorito.nota,
-                    acciones = {
-                        TextButton(onClick = {
-                            notaLocal = favorito.nota
-                            editandoNota = !editandoNota
-                        }) {
-                            Text(if (editandoNota) "Cerrar" else "Editar nota")
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    TarjetaPaper(
+                        titulo = favorito.titulo,
+                        autores = favorito.autores,
+                        anio = favorito.anio,
+                        doi = favorito.doi,
+                        url = favorito.url,
+                        nota = favorito.nota,
+                        acciones = {
+                            TextButton(onClick = {
+                                notaLocal = favorito.nota
+                                editandoNota = !editandoNota
+                            }) {
+                                Text(if (editandoNota) "Cerrar" else "Editar nota")
+                            }
+                            TextButton(
+                                onClick = { enlace?.let { uriHandler.openUri(it) } },
+                                enabled = enlace != null
+                            ) {
+                                Text("Abrir DOI")
+                            }
+                            TextButton(onClick = { viewModel.eliminar(favorito) }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 4.dp)
+                                )
+                                Text("Eliminar")
+                            }
                         }
-                        TextButton(
-                            onClick = { enlace?.let { uriHandler.openUri(it) } },
-                            enabled = enlace != null
-                        ) {
-                            Text("Abrir DOI")
-                        }
-                        TextButton(onClick = { viewModel.eliminar(favorito) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = null,
-                                modifier = Modifier.padding(end = 4.dp)
-                            )
-                            Text("Eliminar")
-                        }
-                    }
-                )
-
-                if (editandoNota) {
-                    EditorNota(
-                        nota = notaLocal,
-                        onCambio = { notaLocal = it },
-                        onGuardar = {
-                            viewModel.actualizarNota(favorito.id, notaLocal)
-                            editandoNota = false
-                        },
-                        onCancelar = { editandoNota = false },
-                        modifier = Modifier.padding(top = 4.dp)
                     )
+
+                    if (editandoNota) {
+                        EditorNota(
+                            nota = notaLocal,
+                            onCambio = { notaLocal = it },
+                            onGuardar = {
+                                viewModel.actualizarNota(favorito.id, notaLocal)
+                                editandoNota = false
+                            },
+                            onCancelar = { editandoNota = false },
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
                 }
             }
         }

@@ -10,8 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigate
-import androidx.navigation.popUpTo
 import kotlinx.coroutines.flow.collectLatest
 
 /**
@@ -30,7 +28,7 @@ fun AppNavigation(
                 is NavigationEvent.NavigateTo -> {
                     navController.navigate(event.route.route) {
                         event.popUpToRoute?.let {
-                            popUpTo(it.route, event.inclusive)
+                            popUpTo(it.route) { inclusive = event.inclusive }
                         }
                         launchSingleTop = event.singleTop
                         restoreState = true
