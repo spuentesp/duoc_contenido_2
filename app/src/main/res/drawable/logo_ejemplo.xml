@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Disco azul de fondo -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M4,60 a56,56 0 1,0 112,0 a56,56 0 1,0 -112,0" />
+    <!-- Página izquierda del libro abierto -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M26,38 L56,46 L56,84 L26,76 Z" />
+    <!-- Página derecha del libro abierto -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M94,38 L64,46 L64,84 L94,76 Z" />
+    <!-- Marcador -->
+    <path
+        android:fillColor="#EF6C00"
+        android:pathData="M55,30 L65,30 L65,52 L60,46 L55,52 Z" />
+</vector>

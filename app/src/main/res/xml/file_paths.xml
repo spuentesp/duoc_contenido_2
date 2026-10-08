@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Guía 13: dónde vive la foto temporal capturada con TakePicture -->
+    <cache-path name="imagenes_cache" path="images/" />
+    <files-path name="imagenes_files" path="images/" />
+</paths>
